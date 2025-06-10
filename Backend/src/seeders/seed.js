@@ -1,15 +1,17 @@
-const { sequelize, User, Template, Dashboard, Connection } = require('../models');
+const {
+  sequelize,
+  User,
+  Template,
+  Dashboard,
+  Connection,
+} = require('../models');
 const bcrypt = require('bcrypt');
 
 async function seed() {
   try {
     console.log('🌱 Starting DB seed...');
-    await sequelize.sync({ force: true }); // Reset DB (⚠️ WARNING: deletes all data)
-
-    // Hash a sample password
+    await sequelize.sync({ force: true });
     const passwordHash = await bcrypt.hash('password123', 10);
-
-    // Create Users
     const user = await User.create({
       name: 'Lakshya',
       email: 'lakshya@example.com',
@@ -17,7 +19,6 @@ async function seed() {
       role: 'admin',
     });
 
-    // Create Templates
     const templates = await Template.bulkCreate([
       {
         name: 'E-Commerce Dashboard',
@@ -34,8 +35,6 @@ async function seed() {
         },
       },
     ]);
-
-    // Create a dashboard for the user
     await Dashboard.create({
       name: 'My Sales Dashboard',
       config: {
@@ -44,7 +43,6 @@ async function seed() {
       userId: user.id,
     });
 
-    // Example DB connection (dummy config)
     await Connection.create({
       type: 'sql',
       dbType: 'mysql',
