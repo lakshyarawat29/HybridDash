@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User } = require('../models/sqlModels/index');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
@@ -13,9 +13,9 @@ async function register({ username, email, password, role }) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await User.create({
-      name: username,  // 👈 mapping username param to model's `name`
+      name: username,
       email,
-      passwordHash: hashedPassword, // 👈 correct field name
+      passwordHash: hashedPassword,
       role: role || 'user',
     });
 

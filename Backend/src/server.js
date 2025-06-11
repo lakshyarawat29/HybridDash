@@ -1,20 +1,19 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const mongoConnection = require('../src/config/db.mongo');
 require('dotenv').config();
 
 const app = express();
-
-// Core middleware
 app.use(cors());
 app.use(express.json());
 app.use(morgan('dev'));
 
-// Load DB + Models
 const sequelize = require('./config/db.sql');
-require('./models'); // Ensures models are registered
+require('../src/models/sqlModels/user.model'); 
+require('../src/models/nosqlModels/userDashboard.model'); 
+require('../src/models/nosqlModels/activityLog.model');    
 
-// Optional: sync DB on startup (or move this to a separate script)
 (async () => {
   try {
     await sequelize.authenticate();
@@ -27,10 +26,17 @@ require('./models'); // Ensures models are registered
   }
 })();
 
+mongoConnection();
+
 // API routes
 const userRoutes = require('../src/routes/user.routes');
+const activityLogRoutes = require('../src/routes/activityLog.routes');
+const userDashboardRoutes = require('../src/routes/userdashboard.routes');
+
 app.use('/api/users', userRoutes);
-// Health check
+app.use('/api', activityLogRoutes);
+app.use('/api', userDashboardRoutes);
+
 app.get('/', (req, res) => {
   res.send('HybridDash API is running');
 });

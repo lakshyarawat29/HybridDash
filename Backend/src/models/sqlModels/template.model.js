@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db.sql');
+const sequelize = require('../../config/db.sql');
 
 const Template = sequelize.define(
   'Template',
